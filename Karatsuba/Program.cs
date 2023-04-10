@@ -4,10 +4,10 @@
     {
         static void Main(string[] args)
         {
-            byte[] X = { 9, 8, 7, 6, 5, 4, 3, 2, 1 };
-            byte[] Y = { 9, 9, 9, 9 };
+            byte[] X = { 9, 9, 9, 9, 9 };
+            byte[] Y = { 9, 9, 9, 9, 9 };
 
-            byte[] z = IntegerMultiply(Y, Y, Y.Length);//Add(X4, Y4)
+            byte[] z = IntegerMultiply(X, Y, X.Length);//Add(X4, Y4)
             Array.Reverse(z);
             foreach (byte x in z)
                 Console.Write(x + " ");
@@ -17,34 +17,19 @@
 
         static public byte[] IntegerMultiply(byte[] X, byte[] Y, int N)
         {
-            if (Y.Length == 0)
-            {
-                byte[] f = new byte[] { 0 };
-                Y = f;
-            }
-            if (X.Length == 0)
-            {
-                byte[] f = new byte[] { 0 };
-                X = f;
-            }
             if (N == 1)
             {
                 byte[] result = new byte[2];
-                int bcase = (X[0] * Y[0]);
+                int bcase = 0;
+                if (Y.Length * X.Length != 0)
+                    bcase = (X[0] * Y[0]);
                 result[0] = (byte)(bcase % 10);
                 result[1] = (byte)(bcase / 10);
                 return result;
             }
-            //if(N%2 == 1)
-            //{
-            //    byte[] xNew = new byte[N + 1];
-            //    Array.Copy(X, xNew, X.Length);
-            //    xNew[N] = 0;
-
-            //}
             int m = N / 2;
-            byte[] B = new byte[N / 2 + N % 2];
-            byte[] D = new byte[N / 2 + N % 2];
+            byte[] B = new byte[m + N % 2];
+            byte[] D = new byte[m + N % 2];
             if (N % 2 == 1)
             {
                 N++;
@@ -60,11 +45,11 @@
             }
             else
             {
-                B = X.Skip(N / 2).ToArray();
-                D = Y.Skip(N / 2).ToArray();
+                B = X.Skip(m).ToArray();
+                D = Y.Skip(m).ToArray();
             }
-            byte[] A = X.Take(N / 2).ToArray();
-            byte[] C = Y.Take(N / 2).ToArray();
+            byte[] A = X.Take(m).ToArray();
+            byte[] C = Y.Take(m).ToArray();
 
             // recursively compute the three products
             byte[] M1 = IntegerMultiply(A, C, Math.Max(A.Length, C.Length));
@@ -80,7 +65,7 @@
             byte[] term1 = AddZeros(M2, N);
             //2nd term : 10^N/2 × (Z – M1 – M2) 
             byte[] subterm2 = Add(M1, M2);
-            byte[] term2 = AddZeros(Subtract(Z, subterm2), N / 2);
+            byte[] term2 = AddZeros(Subtract(Z, subterm2), m);
             //1st term : M1
             // add all the 3 terms
             byte[] res = Add(Add(term1, term2), M1);
