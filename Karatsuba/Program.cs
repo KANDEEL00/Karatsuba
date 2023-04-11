@@ -4,29 +4,63 @@
     {
         static void Main(string[] args)
         {
-            byte[] X = { 9, 9, 9, 9, 9 };
-            byte[] Y = { 9, 9, 9, 9, 9 };
+            int N = (int)Math.Pow(2, 15);
+            byte[] X = new byte[N];//{ 9, 9, 9, 9, 9 };
+            for (int i = 0; i < N; i++) X[i] = 9;
 
-            byte[] z = IntegerMultiply(X, Y, X.Length);//Add(X4, Y4)
-            Array.Reverse(z);
-            foreach (byte x in z)
-                Console.Write(x + " ");
+            //byte[] Y = { 9, 9, 9, 9, 9 };
+
+            byte[] z = IntegerMultiply(X, X, N);//Add(X4, Y4)
+                                                //Array.Reverse(z);
+                                                //foreach (byte x in z)
+                                                //Console.Write(x + " ");
+
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
 
         }
 
         static public byte[] IntegerMultiply(byte[] X, byte[] Y, int N)
         {
-            if (N == 1)
+            if (X.Length < Y.Length)
             {
-                byte[] result = new byte[2];
-                int bcase = 0;
-                if (Y.Length * X.Length != 0)
-                    bcase = (X[0] * Y[0]);
-                result[0] = (byte)(bcase % 10);
-                result[1] = (byte)(bcase / 10);
+                byte[] Xtmp = new byte[N];
+                for (int i = 0; i < N - 1; i++)
+                {
+                    Xtmp[i] = X[i];
+                }
+                Xtmp[N - 1] = 0;
+                X = Xtmp;
+            }
+
+            if (X.Length > Y.Length)
+            {
+                byte[] Ytmp = new byte[N];
+                for (int i = 0; i < N - 1; i++)
+                {
+                    Ytmp[i] = Y[i];
+                }
+                Ytmp[N - 1] = 0;
+                Y = Ytmp;
+            }
+            if (N > 0)
+            {
+                byte[] result = new byte[2 * N];
+                for (int i = 0; i < N; i++)
+                {
+                    for (int j = 0; j < N; j++)
+                    {
+                        result[i + j] += (byte)(X[i] * Y[j]);
+                        result[i + j + 1] += (byte)(result[i + j] / 10);
+                        result[i + j] %= (byte)10;
+                    }
+                }
                 return result;
             }
+
             int m = N / 2;
             byte[] B = new byte[m + N % 2];
             byte[] D = new byte[m + N % 2];
